@@ -15,12 +15,23 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import MongoStore from "connect-mongo"
 
 const app = express();
 const puerto = 8080;
 app.use(cookieParser());
+app.use(
+    session({
+      store: new MongoStore({
+        mongoUrl: "mongodb+srv://ManeraEmmanuel:Remando1235@clustercoder.7s5ftbm.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      }),
+      secret: "secretSession",
+      cookie: { maxAge: 60000 },
+    })
+  );
 initializePassport();
 app.use(passport.initialize());
+app.use(passport.session());
 const httpServer = app.listen(puerto, () => {
     console.log("Servidor Activo en el puerto: " + puerto);
 });
